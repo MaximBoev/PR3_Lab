@@ -25,6 +25,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri("http://localhost:5058")
+});
+
 var app = builder.Build();
 app.MapControllers(); // маппинг API-контроллеров
 
