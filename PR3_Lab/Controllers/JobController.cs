@@ -16,11 +16,11 @@ namespace PR3_Lab.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Job job)
+        public IActionResult Create([FromBody] Job job)
         {
             dbContext.Jobs.Add(job);
             dbContext.SaveChanges();
-            return Ok();
+            return CreatedAtAction(nameof(GetAll), new { id = job.Id }, job);
         }
 
         [HttpDelete("{id:int}")]
@@ -36,15 +36,15 @@ namespace PR3_Lab.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult Update([FromRoute] int id, string title, string description, JobStatus status)
+        public IActionResult Update([FromRoute] int id, [FromBody] Job updatedJob)
         {
             var job = dbContext.Jobs.FirstOrDefault(x => x.Id == id);
-            if (job != null)
-            {
-                job.Title = title;
-                job.Description = description;
-                job.Status = status;
-            }
+            if (job == null) return NotFound();
+
+            job.Title = updatedJob.Title;
+            job.Description = updatedJob.Description;
+            job.Status = updatedJob.Status;
+
             dbContext.SaveChanges();
             return Ok();
         }

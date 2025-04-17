@@ -1,0 +1,12 @@
+﻿@namespace PR3_Lab.Client.Shared
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="typeof(MainLayout)">
+            <p>Извините, по этому адресу ничего нет.</p>
+        </LayoutView>
+    </NotFound>
+</Router>

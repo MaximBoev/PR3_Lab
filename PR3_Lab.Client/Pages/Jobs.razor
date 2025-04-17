@@ -1,0 +1,68 @@
+﻿@page "/jobs"
+@using PR3_Lab.Client.Services
+@using PR3_Lab.Client.Models
+@inject JobService JobService
+@inject NavigationManager NavigationManager
+
+<h3>Job List</h3>
+
+@if (jobs == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <button class="btn btn-primary mb-3" @onclick="() => NavigateToCreate()">Create New Job</button>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in jobs)
+            {
+                <tr>
+                    <td>@job.Id</td>
+                    <td>@job.Title</td>
+                    <td>@job.Description</td>
+                    <td>@job.Status</td>
+                    <td>
+                        <button class="btn btn-warning" @onclick="() => NavigateToEdit(job.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteJob(job.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Job>? jobs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        jobs = await JobService.GetJobsAsync();
+    }
+
+    private void NavigateToCreate()
+    {
+        NavigationManager.NavigateTo("/jobs/create");
+    }
+
+    private void NavigateToEdit(int id)
+    {
+        NavigationManager.NavigateTo($"/jobs/edit/{id}");
+    }
+
+    private async Task DeleteJob(int id)
+    {
+        await JobService.DeleteJobAsync(id);
+        jobs = await JobService.GetJobsAsync();
+    }
+}

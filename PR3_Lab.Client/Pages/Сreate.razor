@@ -1,0 +1,47 @@
+﻿@page "/jobs/create"
+@using PR3_Lab.Client.Services
+@using PR3_Lab.Client.Models
+@inject JobService JobService
+@inject NavigationManager NavigationManager
+
+<h3>Create Job</h3>
+
+<EditForm Model="job" OnValidSubmit="HandleCreate">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Title</label>
+        <InputText class="form-control" @bind-Value="job.Title" />
+        <ValidationMessage For="() => job.Title" />
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <InputTextArea class="form-control" @bind-Value="job.Description" />
+        <ValidationMessage For="() => job.Description" />
+    </div>
+    <div class="form-group">
+        <label>Status</label>
+        <InputSelect class="form-control" @bind-Value="job.Status">
+            @foreach (var status in Enum.GetValues(typeof(JobStatus)))
+            {
+                <option value="@status">@status</option>
+            }
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Create</button>
+    <button class="btn btn-secondary mt-3" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@code {
+    private Job job = new();
+
+    private async Task HandleCreate()
+    {
+        await JobService.CreateJobAsync(job);
+        NavigationManager.NavigateTo("/jobs");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/jobs");
+    }
+}
