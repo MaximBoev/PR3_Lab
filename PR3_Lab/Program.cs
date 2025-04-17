@@ -4,21 +4,9 @@ using PR3_Lab.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Настройка CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowBlazorClient", builder =>
-    {
-        builder.WithOrigins("https://localhost:5058")
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
-// Регистрация контроллеров
-builder.Services.AddControllers();
-
-// Настройка Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -29,22 +17,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Настройка подключения к базе данных
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
-// Автоматическое создание/обновление базы данных
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated(); // Создаёт таблицы на основе моделей
-    // db.Database.Migrate(); // Раскомментируйте, если нужны миграции
+    db.Database.EnsureCreated(); 
 }
 
-// Конфигурация пайплайна HTTP-запросов
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -55,8 +39,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("AllowBlazorClient");
+app.UseBlazorFrameworkFiles(); 
+app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseAuthorization();
+
+app.MapRazorPages();
 app.MapControllers();
+app.MapFallbackToFile("index.html"); 
 
 app.Run();
