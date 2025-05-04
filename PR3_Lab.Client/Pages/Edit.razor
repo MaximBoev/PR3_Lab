@@ -1,0 +1,69 @@
+﻿@page "/jobs/edit/{Id:int}"
+@using PR3_Lab.Client.Services
+@using PR3_Lab.Client.Models
+@inject JobService JobService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Job</h3>
+
+@if (job == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="job" OnValidSubmit="HandleUpdate">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label>Title</label>
+            <InputText class="form-control" @bind-Value="job.Title" />
+            <ValidationMessage For="() => job.Title" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <InputTextArea class="form-control" @bind-Value="job.Description" />
+            <ValidationMessage For="() => job.Description" />
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <InputSelect class="form-control" @bind-Value="job.Status">
+                @foreach (var status in Enum.GetValues(typeof(JobStatus)))
+                {
+                    <option value="@status">@status</option>
+                }
+            </InputSelect>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Update</button>
+        <button class="btn btn-secondary mt-3" @onclick="Cancel">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Job? job;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var jobs = await JobService.GetJobsAsync();
+        job = jobs.FirstOrDefault(j => j.Id == Id);
+
+        if (job == null)
+        {
+            // Можно добавить редирект или сообщение
+            NavigationManager.NavigateTo("/jobs");
+        }
+    }
+
+    private async Task HandleUpdate()
+    {
+        await JobService.UpdateJobAsync(Id, job!);
+        NavigationManager.NavigateTo("/jobs");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/jobs");
+    }
+}

@@ -8,9 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PR3_Lab.Client", "PR3_Lab.Client\PR3_Lab.Client.csproj", "{F719E14B-48AE-47AF-B828-70BDB2F765A0}"
 EndProject
 Global
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -44,5 +41,8 @@ Global
 		{F719E14B-48AE-47AF-B828-70BDB2F765A0}.Release|x64.Build.0 = Release|Any CPU
 		{F719E14B-48AE-47AF-B828-70BDB2F765A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{F719E14B-48AE-47AF-B828-70BDB2F765A0}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
